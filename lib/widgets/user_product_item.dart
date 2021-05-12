@@ -8,7 +8,8 @@ class UserProductItem extends StatelessWidget {
   final String title;
   final String imageUrl;
 
-  const UserProductItem({Key key, this.id, this.title, this.imageUrl}) : super(key: key);
+  const UserProductItem({Key key, this.id, this.title, this.imageUrl})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +25,21 @@ class UserProductItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
-                Navigator.of(context).pushNamed(EditProductScreen.routeName, arguments: id);
+                Navigator.of(context)
+                    .pushNamed(EditProductScreen.routeName, arguments: id);
               },
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
               icon: Icon(Icons.delete),
-              onPressed: () {
-                Provider.of<Products>(context, listen: false).deleteProduct(id);
+              onPressed: () async {
+                try {
+                  await Provider.of<Products>(context, listen: false)
+                      .deleteProduct(id);
+                } catch (ex) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(ex.toString())));
+                }
               },
               color: Theme.of(context).errorColor,
             ),
