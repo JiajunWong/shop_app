@@ -5,6 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Products with ChangeNotifier {
+  final String authToken;
+  final String userId;
+
+  Products(this.authToken, this.userId, this._items);
+
   List<Product> _items = [
     // Product(
     //   id: 'p1',
@@ -54,11 +59,15 @@ class Products with ChangeNotifier {
 
   Future<void> fetchProducts() async {
     final String url =
-        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json';
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(Uri.parse(url));
       final data = json.decode(response.body) as Map<String, dynamic>;
       if (data == null) return;
+
+      final favoriteUrl = 'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(Uri.parse(favoriteUrl));
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> products = [];
       data.forEach((key, value) {
         products.add(Product(
@@ -67,7 +76,7 @@ class Products with ChangeNotifier {
           description: value['description'],
           price: value['price'],
           imageUrl: value['imageUrl'],
-          isFavorite: value['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[key] ?? false,
         ));
       });
       _items = products;
@@ -95,14 +104,13 @@ class Products with ChangeNotifier {
 
     try {
       final String url =
-          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json';
+          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=$authToken';
       final response = await http.post(Uri.parse(url),
           body: json.encode({
             'title': product.title,
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
-            'isFavorite': product.isFavorite,
           }));
       final newProduct = Product(
           title: product.title,
@@ -134,7 +142,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product product) async {
     try {
       final String url =
-          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$id.json';
+          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(Uri.parse(url),
           body: json.encode({
             'title': product.title,
@@ -162,7 +170,7 @@ class Products with ChangeNotifier {
       _items.removeAt(existingProductIndex);
 
       final String url =
-          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$id.json';
+          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
       return http.delete(Uri.parse(url)).then((response) {
         if (response.statusCode >= 400) {
           throw HttpException('Could not delete the product');

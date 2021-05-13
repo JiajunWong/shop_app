@@ -39,7 +39,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (dataSnapshot.error == null) {
+          }
+          if (dataSnapshot.error == null) {
             return Consumer<Orders>(builder: (ctx, ordersData, _) => ListView.builder(
               itemBuilder: (ctx, index) => OrderItem(ordersData.orders[index]),
               itemCount: ordersData.orders.length,

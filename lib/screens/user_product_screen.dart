@@ -10,41 +10,53 @@ class UserProductScreen extends StatelessWidget {
 
   const UserProductScreen({Key key}) : super(key: key);
 
-  Future<void> _onRefresh (BuildContext context) async {
+  Future<void> _onRefresh(BuildContext context) async {
     await Provider.of<Products>(context, listen: false).fetchProducts();
   }
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context);
+    // final productData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your products'),
         actions: [
-          IconButton(icon: const Icon(Icons.add), onPressed: () {
-            Navigator.of(context).pushNamed(EditProductScreen.routeName);
-          }),
+          IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditProductScreen.routeName);
+              }),
         ],
       ),
       drawer: AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _onRefresh(context),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-            itemBuilder: (ctx, index) => Column(
-              children: [
-                UserProductItem(
-                  id: productData.items[index].id,
-                  title: productData.items[index].title,
-                  imageUrl: productData.items[index].imageUrl,
-                ),
-                Divider(),
-              ],
-            ),
-            itemCount: productData.items.length,
-          ),
-        ),
+      body: FutureBuilder(
+        future: _onRefresh(context),
+        builder: (ctx, snapsShot) =>
+            snapsShot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => _onRefresh(context),
+                    child: Consumer<Products>(
+                      builder: (ctx, productData, _) => Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: ListView.builder(
+                          itemBuilder: (ctx, index) => Column(
+                            children: [
+                              UserProductItem(
+                                id: productData.items[index].id,
+                                title: productData.items[index].title,
+                                imageUrl: productData.items[index].imageUrl,
+                              ),
+                              Divider(),
+                            ],
+                          ),
+                          itemCount: productData.items.length,
+                        ),
+                      ),
+                    ),
+                  ),
       ),
     );
   }
