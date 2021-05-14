@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/models/http_exception.dart';
 
-class Auth with ChangeNotifier {
+class AuthProvider with ChangeNotifier {
   String _token;
   DateTime _expireDate;
   String _userId;

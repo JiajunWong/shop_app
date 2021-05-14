@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/models/http_exception.dart';
-import 'package:shop_app/provider/auth.dart';
+import 'package:shop_app/library/providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -162,11 +162,11 @@ class _AuthCardState extends State<AuthCard>
     try {
       if (_authMode == AuthMode.Login) {
         // Log user in
-        await Provider.of<Auth>(context, listen: false)
+        await Provider.of<AuthProvider>(context, listen: false)
             .login(_authData['email'], _authData['password']);
       } else {
         // Sign user up
-        await Provider.of<Auth>(context, listen: false)
+        await Provider.of<AuthProvider>(context, listen: false)
             .signup(_authData['email'], _authData['password']);
       }
     } on HttpException catch (error) {
