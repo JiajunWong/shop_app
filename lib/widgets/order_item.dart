@@ -55,7 +55,7 @@ class _OrderItemState extends State<OrderItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.order.products[index].title,
+                      widget.order.products[index].title!,
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),

@@ -5,12 +5,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Products with ChangeNotifier {
-  final String authToken;
-  final String userId;
+  final String? authToken;
+  final String? userId;
 
   Products(this.authToken, this.userId, this._items);
 
-  List<Product> _items = [
+  List<Product?> _items = [
     // Product(
     //   id: 'p1',
     //   title: 'Red Shirt',
@@ -62,13 +62,13 @@ class Products with ChangeNotifier {
         'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(Uri.parse(url));
-      final data = json.decode(response.body) as Map<String, dynamic>;
+      final data = json.decode(response.body) as Map<String, dynamic>?;
       if (data == null) return;
 
       final favoriteUrl = 'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
       final favoriteResponse = await http.get(Uri.parse(favoriteUrl));
       final favoriteData = json.decode(favoriteResponse.body);
-      final List<Product> products = [];
+      final List<Product?> products = [];
       data.forEach((key, value) {
         products.add(Product(
           id: key,
@@ -86,20 +86,20 @@ class Products with ChangeNotifier {
     }
   }
 
-  List<Product> get items {
+  List<Product?> get items {
     // if (_showFavoriteOnly) {
     //   return _items.where((element) => element.isFavorite).toList();
     // }
     return [..._items];
   }
 
-  List<Product> get favorites {
-    return _items.where((element) => element.isFavorite).toList();
+  List<Product?> get favorites {
+    return _items.where((element) => element!.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product product) async {
-    if (_items.indexWhere((element) => element.id == product.id) >= 0) {
-      return updateProduct(product.id, product);
+  Future<void> addProduct(Product? product) async {
+    if (_items.indexWhere((element) => element!.id == product!.id) >= 0) {
+      return updateProduct(product!.id, product);
     }
 
     try {
@@ -107,7 +107,7 @@ class Products with ChangeNotifier {
           'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=$authToken';
       final response = await http.post(Uri.parse(url),
           body: json.encode({
-            'title': product.title,
+            'title': product!.title,
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
@@ -139,7 +139,7 @@ class Products with ChangeNotifier {
     // });
   }
 
-  Future<void> updateProduct(String id, Product product) async {
+  Future<void> updateProduct(String? id, Product product) async {
     try {
       final String url =
           'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
@@ -150,7 +150,7 @@ class Products with ChangeNotifier {
             'imageUrl': product.imageUrl,
             'price': product.price,
           }));
-      final index = _items.indexWhere((element) => element.id == id);
+      final index = _items.indexWhere((element) => element!.id == id);
       _items[index] = product;
       notifyListeners();
     } catch (error) {
@@ -158,14 +158,14 @@ class Products with ChangeNotifier {
     }
   }
 
-  Product findById(String id) {
-    return _items.firstWhere((element) => element.id == id);
+  Product? findById(String? id) {
+    return _items.firstWhere((element) => element!.id == id);
   }
 
-  Future<void> deleteProduct(String id) {
+  Future<void> deleteProduct(String? id) {
     try {
       final existingProductIndex =
-          _items.indexWhere((element) => element.id == id);
+          _items.indexWhere((element) => element!.id == id);
       var existingProduct = _items[existingProductIndex];
       _items.removeAt(existingProductIndex);
 

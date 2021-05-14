@@ -7,10 +7,10 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String productId = ModalRoute.of(context).settings.arguments as String;
+    String? productId = ModalRoute.of(context)!.settings.arguments as String?;
     // listen: false will prevent the UI rebuild when provider data change
     final product =
-        Provider.of<Products>(context, listen: false).findById(productId);
+        Provider.of<Products>(context, listen: false).findById(productId)!;
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(product.title),
@@ -21,11 +21,11 @@ class ProductDetailScreen extends StatelessWidget {
             expandedHeight: 300,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(product.title),
+              title: Text(product.title!),
               background: Hero(
-                tag: product.id,
+                tag: product.id!,
                 child: Image.network(
-                  product.imageUrl,
+                  product.imageUrl!,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -51,7 +51,7 @@ class ProductDetailScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                product.description,
+                product.description!,
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),

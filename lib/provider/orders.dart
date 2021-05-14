@@ -5,22 +5,22 @@ import 'package:shop_app/provider/cart.dart';
 import 'package:http/http.dart' as http;
 
 class OrderItem {
-  final String id;
-  final double amount;
+  final String? id;
+  final double? amount;
   final List<CartItem> products;
   final DateTime dateTime;
 
   const OrderItem({
-    @required this.id,
-    @required this.amount,
-    @required this.products,
-    @required this.dateTime,
+    required this.id,
+    required this.amount,
+    required this.products,
+    required this.dateTime,
   });
 }
 
 class Orders with ChangeNotifier {
-  final String authToken;
-  final String userId;
+  final String? authToken;
+  final String? userId;
   List<OrderItem> _orders = [];
 
   Orders(this.authToken, this.userId, this._orders);
@@ -36,7 +36,7 @@ class Orders with ChangeNotifier {
       final response = await http.get(
         Uri.parse(url),
       );
-      final data = json.decode(response.body) as Map<String, dynamic>;
+      final data = json.decode(response.body) as Map<String, dynamic>?;
       if (data == null) return;
       final List<OrderItem> orders = [];
       data.forEach((key, value) {

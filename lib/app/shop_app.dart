@@ -22,12 +22,14 @@ class ShopApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => AuthProvider()),
         ChangeNotifierProxyProvider<AuthProvider, Products>(
+            create: (ctx) => Products(null, null, []),
             update: (ctx, auth, previousProducts) => Products(
                 auth.token,
                 auth.userId,
                 previousProducts == null ? [] : previousProducts.items)),
         ChangeNotifierProvider(create: (ctx) => Cart()),
         ChangeNotifierProxyProvider<AuthProvider, Orders>(
+            create: (ctx) => Orders(null, null, []),
             update: (ctx, auth, previousOrders) => Orders(
                 auth.token,
                 auth.userId,
@@ -48,11 +50,11 @@ class ShopApp extends StatelessWidget {
             builder: (ctx, authData, _) => authData.isAuth
                 ? ProductsOverViewScreen()
                 : FutureBuilder(
-                future: authData.tryAutoLogin(),
-                builder: (ctx, snapshot) =>
-                snapshot.connectionState == ConnectionState.waiting
-                    ? SplashScreen()
-                    : AuthScreen())),
+                    future: authData.tryAutoLogin(),
+                    builder: (ctx, snapshot) =>
+                        snapshot.connectionState == ConnectionState.waiting
+                            ? SplashScreen()
+                            : AuthScreen())),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),

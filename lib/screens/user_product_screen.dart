@@ -8,7 +8,7 @@ import 'package:shop_app/widgets/user_product_item.dart';
 class UserProductScreen extends StatelessWidget {
   static const routeName = '/user-product';
 
-  const UserProductScreen({Key key}) : super(key: key);
+  const UserProductScreen({Key? key}) : super(key: key);
 
   Future<void> _onRefresh(BuildContext context) async {
     await Provider.of<Products>(context, listen: false).fetchProducts();
@@ -45,9 +45,9 @@ class UserProductScreen extends StatelessWidget {
                           itemBuilder: (ctx, index) => Column(
                             children: [
                               UserProductItem(
-                                id: productData.items[index].id,
-                                title: productData.items[index].title,
-                                imageUrl: productData.items[index].imageUrl,
+                                id: productData.items[index]!.id,
+                                title: productData.items[index]!.title,
+                                imageUrl: productData.items[index]!.imageUrl,
                               ),
                               Divider(),
                             ],

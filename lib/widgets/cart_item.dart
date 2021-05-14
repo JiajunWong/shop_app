@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/provider/cart.dart';
 
 class CartItem extends StatelessWidget {
-  final String productId;
-  final String id;
-  final double price;
-  final int quantity;
-  final String title;
+  final String? productId;
+  final String? id;
+  final double? price;
+  final int? quantity;
+  final String? title;
 
   const CartItem(
       this.productId, this.id, this.price, this.quantity, this.title);
@@ -63,8 +63,8 @@ class CartItem extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: FittedBox(child: Text('\$$price'))),
             ),
-            title: Text(title),
-            subtitle: Text('Total: \$${quantity * price}'),
+            title: Text(title!),
+            subtitle: Text('Total: \$${quantity! * price!}'),
             trailing: Text('$quantity X'),
           ),
         ),

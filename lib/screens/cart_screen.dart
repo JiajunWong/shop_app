@@ -34,7 +34,7 @@ class CartScreen extends StatelessWidget {
                     label: Text(
                       '\$${cartData.totalAmount}',
                       style: TextStyle(
-                        color: Theme.of(context).primaryTextTheme.title.color,
+                        color: Theme.of(context).primaryTextTheme.title!.color,
                       ),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
@@ -67,8 +67,8 @@ class CartScreen extends StatelessWidget {
 
 class OrderButton extends StatefulWidget {
   const OrderButton({
-    Key key,
-    @required this.cartData,
+    Key? key,
+    required this.cartData,
   }) : super(key: key);
 
   final Cart cartData;

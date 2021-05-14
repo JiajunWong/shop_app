@@ -1,3 +1,5 @@
 class Auth {
-  String _token;
+  String? _token;
+  DateTime? _expireDate;
+  String? _userId;
 }

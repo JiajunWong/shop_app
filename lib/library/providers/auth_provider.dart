@@ -7,22 +7,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/models/http_exception.dart';
 
 class AuthProvider with ChangeNotifier {
-  String _token;
-  DateTime _expireDate;
-  String _userId;
-  Timer _authTimer;
+  String? _token;
+  DateTime? _expireDate;
+  String? _userId;
+  Timer? _authTimer;
 
   bool get isAuth {
     return token != null;
   }
 
-  String get userId {
+  String? get userId {
     return _userId;
   }
 
-  String get token {
+  String? get token {
     if (_expireDate != null &&
-        _expireDate.isAfter(DateTime.now()) &&
+        _expireDate!.isAfter(DateTime.now()) &&
         _token != null) {
       return _token;
     }
@@ -34,9 +34,9 @@ class AuthProvider with ChangeNotifier {
     if(!prefs.containsKey('auth')) {
       return false;
     } else {
-      final data = json.decode(prefs.getString('auth')) as Map<String, dynamic>;
+      final data = json.decode(prefs.getString('auth')!) as Map<String, dynamic>;
       _expireDate = DateTime.parse(data['expireDate']);
-      if (_expireDate.isBefore(DateTime.now())) {
+      if (_expireDate!.isBefore(DateTime.now())) {
         return false;
       }
       _token = data['token'];
@@ -51,7 +51,7 @@ class AuthProvider with ChangeNotifier {
     _token = null;
     _userId = null;
     _expireDate = null;
-    if (_authTimer != null) _authTimer.cancel();
+    if (_authTimer != null) _authTimer!.cancel();
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
@@ -59,15 +59,15 @@ class AuthProvider with ChangeNotifier {
 
   void _autoLogout() {
     if (_authTimer != null) {
-      _authTimer.cancel();
+      _authTimer!.cancel();
     }
-    final timeToExpired = _expireDate.difference(DateTime.now()).inSeconds;
+    final timeToExpired = _expireDate!.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpired), () {
       logout();
     });
   }
 
-  Future<void> signup(String email, String password) async {
+  Future<void> signup(String? email, String? password) async {
     try {
       final String url =
           'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBJJU_uhGn09M-BRMbXjaYK32rWl-o_SDc';
@@ -91,7 +91,7 @@ class AuthProvider with ChangeNotifier {
         final userData = json.encode({
           'token': _token,
           'userId': _userId,
-          'expireDate': _expireDate.toIso8601String(),
+          'expireDate': _expireDate!.toIso8601String(),
         });
         prefs.setString('auth', userData);
       }
@@ -100,7 +100,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String? email, String? password) async {
     try {
       final String url =
           'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBJJU_uhGn09M-BRMbXjaYK32rWl-o_SDc';
@@ -124,7 +124,7 @@ class AuthProvider with ChangeNotifier {
         final userData = json.encode({
           'token': _token,
           'userId': _userId,
-          'expireDate': _expireDate.toIso8601String(),
+          'expireDate': _expireDate!.toIso8601String(),
         });
         prefs.setString('auth', userData);
       }

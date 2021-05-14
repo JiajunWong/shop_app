@@ -18,14 +18,14 @@ class ProductItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProductDetailScreen.routeName,
-              arguments: productData.id,
+              arguments: productData!.id,
             );
           },
           child: Hero(
-            tag: productData.id,
+            tag: productData!.id!,
             child: FadeInImage(
               placeholder: AssetImage('assets/images/product-placeholder.png'),
-              image: NetworkImage(productData.imageUrl),
+              image: NetworkImage(productData!.imageUrl!),
               fit: BoxFit.cover,
             ),
           ),
@@ -33,7 +33,7 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           title: Text(
-            productData.title,
+            productData.title!,
             textAlign: TextAlign.center,
           ),
           leading: Consumer<Product>(
