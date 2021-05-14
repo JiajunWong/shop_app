@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ShopApis {
-  static const _API_KEY = 'AIzaSyBJJU_uhGn09M-BRMbXjaYK32rWl-o_SDc';
+  static const _API_KEY = '';
 
   static Future<http.Response> login(String email, String password) {
     final String url =
