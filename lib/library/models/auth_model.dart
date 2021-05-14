@@ -1,5 +1,7 @@
-class Auth {
-  String? _token;
-  DateTime? _expireDate;
-  String? _userId;
+class AuthModel {
+  final String token;
+  final DateTime expireDate;
+  final String userId;
+
+  const AuthModel(this.token, this.expireDate, this.userId);
 }

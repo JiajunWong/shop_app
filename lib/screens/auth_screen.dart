@@ -97,7 +97,7 @@ class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  Map<String, String?> _authData = {
+  Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
@@ -160,15 +160,8 @@ class _AuthCardState extends State<AuthCard>
       _isLoading = true;
     });
     try {
-      if (_authMode == AuthMode.Login) {
-        // Log user in
-        await Provider.of<AuthProvider>(context, listen: false)
-            .login(_authData['email'], _authData['password']);
-      } else {
-        // Sign user up
-        await Provider.of<AuthProvider>(context, listen: false)
-            .signup(_authData['email'], _authData['password']);
-      }
+      await Provider.of<AuthProvider>(context, listen: false)
+          .auth(_authData['email']!, _authData['password']!, _authMode == AuthMode.Login);
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
@@ -237,7 +230,7 @@ class _AuthCardState extends State<AuthCard>
                     return null;
                   },
                   onSaved: (value) {
-                    _authData['email'] = value;
+                    _authData['email'] = value!;
                   },
                 ),
                 TextFormField(
@@ -250,7 +243,7 @@ class _AuthCardState extends State<AuthCard>
                     }
                   },
                   onSaved: (value) {
-                    _authData['password'] = value;
+                    _authData['password'] = value!;
                   },
                 ),
                 // if (_authMode == AuthMode.Signup)
