@@ -4,8 +4,15 @@ import 'package:http/http.dart' as http;
 
 class ShopApis {
   static const _API_KEY = '';
+  static final ShopApis _singleton = ShopApis._internal();
 
-  static Future<http.Response> login(String email, String password) {
+  factory ShopApis(){
+    return _singleton;
+  }
+
+  ShopApis._internal();
+
+  Future<http.Response> login(String email, String password) {
     final String url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$_API_KEY';
     return http.post(Uri.parse(url),
@@ -16,7 +23,7 @@ class ShopApis {
         }));
   }
 
-  static Future<http.Response> signup(String email, String password) {
+  Future<http.Response> signup(String email, String password) {
     final String url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$_API_KEY';
     return http.post(Uri.parse(url),

@@ -11,6 +11,14 @@ class AuthProvider with ChangeNotifier {
   AuthModel? _authModel;
   Timer? _authTimer;
 
+  Future<SharedPreferences> _sharedPreferences;
+  ShopApis _shopApis;
+
+  AuthProvider(): this.testing(SharedPreferences.getInstance(), ShopApis());
+
+  @visibleForTesting
+  AuthProvider.testing(this._sharedPreferences, this._shopApis);
+
   bool get isAuth {
     return token != null;
   }
@@ -27,7 +35,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _sharedPreferences;
     if (!prefs.containsKey('auth')) {
       return false;
     } else {
@@ -46,15 +54,15 @@ class AuthProvider with ChangeNotifier {
     _authModel = null;
     _authTimer?.cancel();
     notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _sharedPreferences;
     prefs.clear();
   }
 
   Future<void> auth(String email, String password, bool isLogin) async {
     try {
       final response = isLogin
-          ? await ShopApis.login(email, password)
-          : await ShopApis.signup(email, password);
+          ? await _shopApis.login(email, password)
+          : await _shopApis.signup(email, password);
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
@@ -62,9 +70,9 @@ class AuthProvider with ChangeNotifier {
         _authModel = AuthModel.fromJson(responseData);
         _autoLogout();
         notifyListeners();
-        final prefs = await SharedPreferences.getInstance();
+        final prefs = await _sharedPreferences;
         final userData = json.encode(_authModel!.toJson());
-        prefs.setString('auth', userData);
+        await prefs.setString('auth', userData);
       }
     } catch (error) {
       throw error;
