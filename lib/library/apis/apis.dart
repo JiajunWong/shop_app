@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -32,5 +33,17 @@ class ShopApis {
           'password': password,
           'returnSecureToken': true,
         }));
+  }
+
+  Future<http.Response> getProductList(String authToken) {
+    final String url =
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+    return http.get(Uri.parse(url));
+  }
+
+  Future<http.Response> getFavoriteProductList(String authToken, String userId) {
+    final String url =
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+    return http.get(Uri.parse(url));
   }
 }

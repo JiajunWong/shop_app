@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/cart.dart';
-import 'package:shop_app/provider/products.dart';
+import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
 import 'package:shop_app/widgets/badge.dart';
@@ -30,7 +30,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
     setState(() {
       _isLoading = true;
     });
-    Provider.of<Products>(context, listen: false).fetchProducts().then((value) {
+    Provider.of<ProductsProvider>(context, listen: false).fetchProducts().then((value) {
       setState(() {
         _isLoading = false;
       });

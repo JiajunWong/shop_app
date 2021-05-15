@@ -4,7 +4,7 @@ import 'package:shop_app/helpers/custom_route.dart';
 import 'package:shop_app/library/providers/auth_provider.dart';
 import 'package:shop_app/provider/cart.dart';
 import 'package:shop_app/provider/orders.dart';
-import 'package:shop_app/provider/products.dart';
+import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
@@ -21,11 +21,11 @@ class ShopApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => AuthProvider()),
-        ChangeNotifierProxyProvider<AuthProvider, Products>(
-            create: (ctx) => Products(null, null, []),
-            update: (ctx, auth, previousProducts) => Products(
-                auth.token,
-                auth.userId,
+        ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
+            create: (ctx) => ProductsProvider(null, null, []),
+            update: (ctx, authProvider, previousProducts) => ProductsProvider(
+                authProvider.token,
+                authProvider.userId,
                 previousProducts == null ? [] : previousProducts.items)),
         ChangeNotifierProvider(create: (ctx) => Cart()),
         ChangeNotifierProxyProvider<AuthProvider, Orders>(

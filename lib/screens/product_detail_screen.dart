@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/products.dart';
+import 'package:shop_app/library/providers/products_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   static const String routeName = '/product-detail';
@@ -8,9 +8,12 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? productId = ModalRoute.of(context)!.settings.arguments as String?;
+    if (productId == null) {
+      Navigator.of(context).pop();
+    }
     // listen: false will prevent the UI rebuild when provider data change
     final product =
-        Provider.of<Products>(context, listen: false).findById(productId)!;
+        Provider.of<ProductsProvider>(context, listen: false).findById(productId!);
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(product.title),

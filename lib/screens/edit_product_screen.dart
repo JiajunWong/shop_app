@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/product.dart';
-import 'package:shop_app/provider/products.dart';
+import 'package:shop_app/library/models/product_model.dart';
+import 'package:shop_app/library/providers/products_provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -18,8 +18,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageFocusNode = FocusNode();
   final _imageURLController = TextEditingController();
   final _form = GlobalKey<FormState>();
-  Product? _editedProduct =
-      Product(id: null, title: '', description: '', imageUrl: '', price: 0);
+  ProductModel _editedProduct =
+      ProductModel(id: '', title: '', description: '', imageUrl: '', price: 0);
   var _isInit = false;
   var _initValues = {
     'title': '',
@@ -42,8 +42,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _isInit = true;
     final productId = ModalRoute.of(context)!.settings.arguments as String?;
     if (productId == null || productId.isEmpty) return;
-    _editedProduct =
-        Provider.of<Products>(context, listen: false).findById(productId);
+    _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
+        .findById(productId);
     _imageURLController.text = _editedProduct!.imageUrl!;
     _initValues = {
       'title': _editedProduct!.title!,
@@ -71,7 +71,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         _isLoading = true;
       });
       try {
-        await Provider.of<Products>(context, listen: false)
+        await Provider.of<ProductsProvider>(context, listen: false)
             .addProduct(_editedProduct);
       } catch (error) {
         await showDialog(
@@ -140,8 +140,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         }
                       },
                       onSaved: (value) {
-                        _editedProduct = Product(
-                            title: value,
+                        _editedProduct = ProductModel(
+                            title: value!,
                             price: _editedProduct!.price,
                             imageUrl: _editedProduct!.imageUrl,
                             id: _editedProduct!.id,
@@ -173,7 +173,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _editedProduct = Product(
+                        _editedProduct = ProductModel(
                             title: _editedProduct!.title,
                             price: double.parse(value!),
                             imageUrl: _editedProduct!.imageUrl,
@@ -200,12 +200,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         }
                       },
                       onSaved: (value) {
-                        _editedProduct = Product(
+                        _editedProduct = ProductModel(
                             title: _editedProduct!.title,
                             price: _editedProduct!.price,
                             imageUrl: _editedProduct!.imageUrl,
                             id: _editedProduct!.id,
-                            description: value);
+                            description: value!);
                       },
                     ),
                     Row(
@@ -250,10 +250,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               }
                             },
                             onSaved: (value) {
-                              _editedProduct = Product(
+                              _editedProduct = ProductModel(
                                   title: _editedProduct!.title,
                                   price: _editedProduct!.price,
-                                  imageUrl: value,
+                                  imageUrl: value!,
                                   id: _editedProduct!.id,
                                   description: _editedProduct!.description);
                             },

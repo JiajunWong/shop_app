@@ -23,6 +23,10 @@ class AuthProvider with ChangeNotifier {
     return token != null;
   }
 
+  AuthModel? get authModel {
+    return authModel;
+  }
+
   String? get userId {
     return _authModel?.userId;
   }
@@ -72,7 +76,7 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
         final prefs = await _sharedPreferences;
         final userData = json.encode(_authModel!.toJson());
-        await prefs.setString('auth', userData);
+        prefs.setString('auth', userData);
       }
     } catch (error) {
       throw error;

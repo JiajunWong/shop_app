@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/products.dart';
+import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 
 class UserProductItem extends StatelessWidget {
@@ -34,8 +34,8 @@ class UserProductItem extends StatelessWidget {
               icon: Icon(Icons.delete),
               onPressed: () async {
                 try {
-                  await Provider.of<Products>(context, listen: false)
-                      .deleteProduct(id);
+                  await Provider.of<ProductsProvider>(context, listen: false)
+                      .deleteProduct(id!);
                 } catch (ex) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(ex.toString())));
