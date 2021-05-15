@@ -5,7 +5,7 @@ import 'package:shop_app/library/providers/auth_provider.dart';
 import 'package:shop_app/library/providers/cart_provider.dart';
 import 'package:shop_app/library/providers/orders_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
-import 'package:shop_app/screens/auth_screen.dart';
+import 'package:shop_app/features/authentication/auth_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
