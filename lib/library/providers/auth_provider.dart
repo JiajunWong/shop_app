@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/library/apis/apis.dart';
 import 'package:shop_app/library/models/auth_model.dart';
-import 'package:shop_app/models/http_exception.dart';
+import 'package:shop_app/library/models/exceptions/http_exception.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthModel? _authModel;
@@ -32,7 +32,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   String? get token {
-    if (_authModel?.expireDate.isAfter(DateTime.now()) ?? false) {
+    if (_authModel != null && _authModel!.expireDate.isAfter(DateTime.now())) {
       return _authModel?.token;
     }
     return null;

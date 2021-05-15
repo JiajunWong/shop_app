@@ -108,4 +108,16 @@ class MockShopApis extends _i1.Mock implements _i5.ShopApis {
       (super.noSuchMethod(Invocation.method(#signup, [email, password]),
               returnValue: Future<_i2.Response>.value(_FakeResponse()))
           as _i4.Future<_i2.Response>);
+  @override
+  _i4.Future<_i2.Response> getProductList(String? authToken) =>
+      (super.noSuchMethod(Invocation.method(#getProductList, [authToken]),
+              returnValue: Future<_i2.Response>.value(_FakeResponse()))
+          as _i4.Future<_i2.Response>);
+  @override
+  _i4.Future<_i2.Response> getFavoriteProductList(
+          String? authToken, String? userId) =>
+      (super.noSuchMethod(
+              Invocation.method(#getFavoriteProductList, [authToken, userId]),
+              returnValue: Future<_i2.Response>.value(_FakeResponse()))
+          as _i4.Future<_i2.Response>);
 }

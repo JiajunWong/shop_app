@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/library/apis/apis.dart';
+import 'package:shop_app/library/apis/response_data.dart';
 import 'package:shop_app/library/models/product_model.dart';
-import 'package:shop_app/models/http_exception.dart';
+import 'package:shop_app/library/models/exceptions/http_exception.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -17,64 +18,33 @@ class ProductsProvider with ChangeNotifier {
   ProductsProvider.testing(
       this.authToken, this.userId, this._items, this.shopApis);
 
-  List<ProductModel> _items = [
-    // Product(
-    //   id: 'p1',
-    //   title: 'Red Shirt',
-    //   description: 'A red shirt - it is pretty red!',
-    //   price: 29.99,
-    //   imageUrl:
-    //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    // ),
-    // Product(
-    //   id: 'p2',
-    //   title: 'Trousers',
-    //   description: 'A nice pair of trousers.',
-    //   price: 59.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    // ),
-    // Product(
-    //   id: 'p3',
-    //   title: 'Yellow Scarf',
-    //   description: 'Warm and cozy - exactly what you need for the winter.',
-    //   price: 19.99,
-    //   imageUrl:
-    //       'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    // ),
-    // Product(
-    //   id: 'p4',
-    //   title: 'A Pan',
-    //   description: 'Prepare any meal you want.',
-    //   price: 49.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    // ),
-  ];
+  List<ProductModel> _items = [];
 
   Future<void> fetchProducts() async {
     if (authToken == null || userId == null) {
       return;
     }
+
     try {
       final response = await shopApis.getProductList(authToken!);
-      final data = json.decode(response.body) as Map<String, dynamic>?;
-      if (data == null) return;
+      final data = ResponseData(response).data;
 
-      final favoriteResponse = await shopApis.getFavoriteProductList(
-          authToken!, userId!);
-      final favoriteData = json.decode(favoriteResponse.body);
       final List<ProductModel> products = [];
+      ProductModel productModel;
       data.forEach((key, value) {
-        products.add(ProductModel(
-          id: value['id'],
-          title: value['title'],
-          description: value['description'],
-          price: value['price'],
-          imageUrl: value['imageUrl'],
-          isFavorite: favoriteData == null ? false : favoriteData[key] ?? false,
-        ));
+        productModel = ProductModel.fromJson(value);
+        productModel.key = key;
+        products.add(productModel);
       });
+
+      final favoriteResponse =
+          await shopApis.getFavoriteProductList(authToken!, userId!);
+      var favoriteData = ResponseData(favoriteResponse).data;
+
+      favoriteData.forEach((key, value) {
+        products.firstWhere((element) => element.id == key).isFavorite = value;
+      });
+
       _items = products;
       notifyListeners();
     } catch (error) {
@@ -83,9 +53,6 @@ class ProductsProvider with ChangeNotifier {
   }
 
   List<ProductModel> get items {
-    // if (_showFavoriteOnly) {
-    //   return _items.where((element) => element.isFavorite).toList();
-    // }
     return [..._items];
   }
 
@@ -94,14 +61,32 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(ProductModel product) async {
-    if (_items.indexWhere((element) => element.id == product.id) >= 0) {
-      return updateProduct(product.id, product);
+    if (_items.indexWhere((element) => element.id == product.id) >= 0 && product.key != null) {
+      return updateProduct(product.key!, product);
     }
 
     try {
+      final response = await shopApis.createProduct(authToken!, product);
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      if (data['error'] != null) {
+        throw HttpException(data['error'] as String);
+      } else {
+        product.key = json.decode(response.body)['name'];
+        if (product.key != null) {
+          _items.add(product);
+          notifyListeners();
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateProduct(String key, ProductModel product) async {
+    try {
       final String url =
-          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=${authToken!}';
-      await http.post(Uri.parse(url),
+          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$key.json?auth=${authToken!}';
+      await http.patch(Uri.parse(url),
           body: json.encode({
             'id': product.id,
             'title': product.title,
@@ -109,25 +94,7 @@ class ProductsProvider with ChangeNotifier {
             'imageUrl': product.imageUrl,
             'price': product.price,
           }));
-      _items.add(product);
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<void> updateProduct(String id, ProductModel product) async {
-    try {
-      final String url =
-          'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$id.json?auth=${authToken!}';
-      await http.patch(Uri.parse(url),
-          body: json.encode({
-            'title': product.title,
-            'description': product.description,
-            'imageUrl': product.imageUrl,
-            'price': product.price,
-          }));
-      final index = _items.indexWhere((element) => element.id == id);
+      final index = _items.indexWhere((element) => element.id == product.id);
       _items[index] = product;
       notifyListeners();
     } catch (error) {
@@ -163,23 +130,24 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-// void toggleFavoriteStatus(String? authToken, String? userId) async {
-//   final oldState = isFavorite;
-//   isFavorite = !isFavorite;
-//   notifyListeners();
-//
-//   try {
-//     final String url =
-//         'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$authToken';
-//     final response = await http.put(Uri.parse(url),
-//         body: json.encode(isFavorite));
-//     if (response.statusCode >= 400) {
-//       throw HttpException("Toggle favorite failed");
-//     }
-//   } catch (error) {
-//     isFavorite = oldState;
-//     notifyListeners();
-//     throw error;
-//   }
-// }
+  void toggleFavoriteStatus(String authToken, String userId, String productId) async {
+    final product = findById(productId);
+    if (product != null) {
+      final oldState = product.isFavorite;
+      product.isFavorite = !product.isFavorite;
+
+      try {
+        final response = await shopApis.updateUserProductFavorite(
+            authToken, userId, productId, product.isFavorite);
+        if (response.statusCode >= 400) {
+          throw HttpException("Toggle favorite failed");
+        }
+        notifyListeners();
+      } catch (error) {
+        product.isFavorite = oldState;
+        notifyListeners();
+        throw error;
+      }
+    }
+  }
 }

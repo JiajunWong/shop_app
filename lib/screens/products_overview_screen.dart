@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/library/models/exceptions/token_expire_exception.dart';
+import 'package:shop_app/library/widgets/token_expire_alert.dart';
 import 'package:shop_app/provider/cart.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
@@ -19,23 +21,6 @@ class ProductsOverViewScreen extends StatefulWidget {
 
 class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
   var _showOnlyFavorite = false;
-  var _isInit = false;
-  var _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInit) return;
-    _isInit = true;
-    setState(() {
-      _isLoading = true;
-    });
-    Provider.of<ProductsProvider>(context, listen: false).fetchProducts().then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +65,26 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ProductGrid(_showOnlyFavorite),
+      body: FutureBuilder(
+          future: Provider.of<ProductsProvider>(context, listen: false)
+              .fetchProducts(),
+          builder: (ctx, dataSnapshot) {
+            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (dataSnapshot.hasError) {
+              if (dataSnapshot.error is TokenExpireException) {
+                return TokenExpireAlert();
+              } else {
+                return Center(
+                  child: Text(dataSnapshot.error.toString()),
+                );
+              }
+            }
+            return ProductGrid(_showOnlyFavorite);
+          }),
     );
   }
 }

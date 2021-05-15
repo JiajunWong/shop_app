@@ -4,13 +4,15 @@ part 'product_model.g.dart';
 
 @JsonSerializable()
 class ProductModel {
-  String id;
-  String title;
-  String description;
-  String imageUrl;
-  double price;
+  final String id;
+  final String title;
+  final String description;
+  final String imageUrl;
+  final double price;
   @JsonKey(ignore: true)
   bool isFavorite;
+  @JsonKey(ignore: true)
+  String? key;
 
   ProductModel({
     required this.id,

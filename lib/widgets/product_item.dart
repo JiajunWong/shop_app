@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/library/models/product_model.dart';
+import 'package:shop_app/library/providers/auth_provider.dart';
+import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/provider/cart.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
@@ -11,6 +13,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authData = Provider.of<AuthProvider>(context, listen: false);
     final cartData = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -44,7 +47,9 @@ class ProductItem extends StatelessWidget {
             // label: child
             color: Theme.of(context).accentColor,
             onPressed: () {
-              // productData.toggleFavoriteStatus(authData.token, authData.userId);
+              Provider.of<ProductsProvider>(context, listen: false)
+                  .toggleFavoriteStatus(
+                      authData.token!, authData.userId!, _productModel.id);
             },
           ),
           // child: Text('never change'),
