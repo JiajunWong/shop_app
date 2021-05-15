@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/library/providers/orders_provider.dart' show OrderProvider;
-import 'package:shop_app/widgets/app_drawer.dart';
-import 'package:shop_app/widgets/order_item.dart';
+import 'package:shop_app/library/widgets/app_drawer.dart';
+import 'package:shop_app/features/order_list/order_item.dart';
 
 class OrdersScreen extends StatefulWidget {
   static const routeName = '/orders';
@@ -26,7 +26,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final ordersData = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your orders'),

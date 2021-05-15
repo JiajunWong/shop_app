@@ -126,8 +126,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void toggleFavoriteStatus(
-      String authToken, String userId, String productId) async {
+  void toggleFavoriteStatus(String productId) async {
     final product = findById(productId);
     if (product != null) {
       final oldState = product.isFavorite;
@@ -135,7 +134,7 @@ class ProductsProvider with ChangeNotifier {
 
       try {
         final response = await _shopApis.updateUserProductFavorite(
-            authToken, userId, productId, product.isFavorite);
+            authToken!, userId!, productId, product.isFavorite);
         if (response.statusCode >= 400) {
           throw HttpException("Toggle favorite failed");
         }

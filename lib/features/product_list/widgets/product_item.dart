@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/library/models/product_model.dart';
-import 'package:shop_app/library/providers/auth_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/library/providers/cart_provider.dart';
-import 'package:shop_app/screens/product_detail_screen.dart';
+import 'package:shop_app/features/product_detail/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
   final ProductModel _productModel;
@@ -13,8 +12,6 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authData = Provider.of<AuthProvider>(context, listen: false);
-    final cartData = Provider.of<CartProvider>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -48,8 +45,7 @@ class ProductItem extends StatelessWidget {
             color: Theme.of(context).accentColor,
             onPressed: () {
               Provider.of<ProductsProvider>(context, listen: false)
-                  .toggleFavoriteStatus(
-                      authData.token!, authData.userId!, _productModel.id);
+                  .toggleFavoriteStatus(_productModel.id);
             },
           ),
           // child: Text('never change'),
@@ -57,6 +53,7 @@ class ProductItem extends StatelessWidget {
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).accentColor,
             onPressed: () {
+              final cartData = Provider.of<CartProvider>(context, listen: false);
               cartData.addItem(
                   _productModel.id, _productModel.price, _productModel.title);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

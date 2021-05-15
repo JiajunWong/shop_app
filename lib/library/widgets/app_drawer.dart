@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/app/custom_route.dart';
 import 'package:shop_app/library/providers/auth_provider.dart';
-import 'package:shop_app/screens/orders_screen.dart';
-import 'package:shop_app/screens/user_product_screen.dart';
+import 'package:shop_app/features/order_list/orders_screen.dart';
+import 'package:shop_app/features/product_manage/user_product_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);

@@ -6,13 +6,13 @@ import 'package:shop_app/library/providers/cart_provider.dart';
 import 'package:shop_app/library/providers/orders_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/features/authentication/auth_screen.dart';
-import 'package:shop_app/screens/cart_screen.dart';
-import 'package:shop_app/screens/edit_product_screen.dart';
-import 'package:shop_app/screens/orders_screen.dart';
-import 'package:shop_app/screens/product_detail_screen.dart';
-import 'package:shop_app/screens/products_overview_screen.dart';
-import 'package:shop_app/screens/splash_screen.dart';
-import 'package:shop_app/screens/user_product_screen.dart';
+import 'package:shop_app/features/cart/cart_screen.dart';
+import 'package:shop_app/features/product_manage/edit_product_screen.dart';
+import 'package:shop_app/features/order_list/orders_screen.dart';
+import 'package:shop_app/features/product_detail/product_detail_screen.dart';
+import 'package:shop_app/features/product_list/products_overview_screen.dart';
+import 'package:shop_app/features/splash/splash_screen.dart';
+import 'package:shop_app/features/product_manage/user_product_screen.dart';
 
 class ShopApp extends StatelessWidget {
   @override

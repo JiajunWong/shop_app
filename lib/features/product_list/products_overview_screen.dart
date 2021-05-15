@@ -4,10 +4,10 @@ import 'package:shop_app/library/models/exceptions/token_expire_exception.dart';
 import 'package:shop_app/library/widgets/token_expire_alert.dart';
 import 'package:shop_app/library/providers/cart_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
-import 'package:shop_app/screens/cart_screen.dart';
-import 'package:shop_app/widgets/app_drawer.dart';
-import 'package:shop_app/widgets/badge.dart';
-import 'package:shop_app/widgets/product_grid.dart';
+import 'package:shop_app/features/cart/cart_screen.dart';
+import 'package:shop_app/library/widgets/app_drawer.dart';
+import 'package:shop_app/features/product_list/widgets/badge.dart';
+import 'package:shop_app/features/product_list/widgets/product_grid.dart';
 
 enum FliterOptions {
   Favorites,
