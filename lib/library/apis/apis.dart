@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shop_app/library/models/order_model.dart';
 import 'package:shop_app/library/models/product_model.dart';
 
 class ShopApis {
-  static const _API_KEY = 'AIzaSyBJJU_uhGn09M-BRMbXjaYK32rWl-o_SDc';
+  static const _API_KEY = '';
   static final ShopApis _singleton = ShopApis._internal();
 
   factory ShopApis(){
@@ -70,5 +71,17 @@ class ShopApis {
     final String url =
         'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$key.json?auth=$authToken';
     return http.delete(Uri.parse(url));
+  }
+
+  Future<http.Response> getOrderList(String authToken, String userId) {
+    final String url =
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
+    return http.get(Uri.parse(url));
+  }
+
+  Future<http.Response> createOrder(String authToken, String userId, OrderModel orderModel) {
+    final String url =
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
+    return http.post(Uri.parse(url), body: json.encode(orderModel.toJson()));
   }
 }

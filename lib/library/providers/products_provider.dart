@@ -38,7 +38,9 @@ class ProductsProvider with ChangeNotifier {
     try {
       final response = await _shopApis.getProductList(authToken!);
       final data = ResponseData(response).data;
-
+      if (data == null) {
+        return;
+      }
       final List<ProductModel> products = [];
       ProductModel productModel;
       data.forEach((key, value) {
@@ -50,6 +52,9 @@ class ProductsProvider with ChangeNotifier {
       final favoriteResponse =
           await _shopApis.getFavoriteProductList(authToken!, userId!);
       var favoriteData = ResponseData(favoriteResponse).data;
+      if (favoriteData == null) {
+        return;
+      }
 
       favoriteData.forEach((key, value) {
         products.firstWhere((element) => element.id == key).isFavorite = value;
@@ -71,6 +76,9 @@ class ProductsProvider with ChangeNotifier {
     try {
       final response = await _shopApis.createProduct(authToken!, product);
       final data = ResponseData(response).data;
+      if (data == null) {
+        return;
+      }
       product.key = data['name'];
       if (product.key != null) {
         _items.add(product);

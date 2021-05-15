@@ -11,9 +11,9 @@ class ResponseData {
 
   const ResponseData(this._response);
 
-  Map<String, dynamic> get data {
-    final data = json.decode(_response.body) as Map<String, dynamic>;
-    if (data[_ERROR] != null) {
+  Map<String, dynamic>? get data {
+    final data = json.decode(_response.body) as Map<String, dynamic>?;
+    if (data != null && data[_ERROR] != null) {
       if (data[_ERROR] == _TOKEN_EXPIRED) {
         throw TokenExpireException(_TOKEN_EXPIRED);
       } else {
