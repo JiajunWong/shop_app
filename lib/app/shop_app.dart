@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/app/custom_route.dart';
 import 'package:shop_app/library/providers/auth_provider.dart';
 import 'package:shop_app/library/providers/cart_provider.dart';
-import 'package:shop_app/provider/orders.dart';
+import 'package:shop_app/library/providers/orders_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
@@ -15,7 +15,6 @@ import 'package:shop_app/screens/splash_screen.dart';
 import 'package:shop_app/screens/user_product_screen.dart';
 
 class ShopApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -28,9 +27,9 @@ class ShopApp extends StatelessWidget {
                 authProvider.userId,
                 previousProducts == null ? [] : previousProducts.items)),
         ChangeNotifierProvider(create: (ctx) => CartProvider()),
-        ChangeNotifierProxyProvider<AuthProvider, Orders>(
-            create: (ctx) => Orders(null, null, []),
-            update: (ctx, auth, previousOrders) => Orders(
+        ChangeNotifierProxyProvider<AuthProvider, OrderProvider>(
+            create: (ctx) => OrderProvider(null, null, []),
+            update: (ctx, auth, previousOrders) => OrderProvider(
                 auth.token,
                 auth.userId,
                 previousOrders == null ? [] : previousOrders.orders)),

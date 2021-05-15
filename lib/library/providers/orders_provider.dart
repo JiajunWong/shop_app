@@ -3,29 +3,16 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shop_app/library/models/cart_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/library/models/order_model.dart';
 
-class OrderItem {
-  final String? id;
-  final double? amount;
-  final List<CartModel> products;
-  final DateTime dateTime;
-
-  const OrderItem({
-    required this.id,
-    required this.amount,
-    required this.products,
-    required this.dateTime,
-  });
-}
-
-class Orders with ChangeNotifier {
+class OrderProvider with ChangeNotifier {
   final String? authToken;
   final String? userId;
-  List<OrderItem> _orders = [];
+  List<OrderModel> _orders = [];
 
-  Orders(this.authToken, this.userId, this._orders);
+  OrderProvider(this.authToken, this.userId, this._orders);
 
-  List<OrderItem> get orders {
+  List<OrderModel> get orders {
     return [..._orders];
   }
 
@@ -38,9 +25,9 @@ class Orders with ChangeNotifier {
       );
       final data = json.decode(response.body) as Map<String, dynamic>?;
       if (data == null) return;
-      final List<OrderItem> orders = [];
+      final List<OrderModel> orders = [];
       data.forEach((key, value) {
-        orders.add(OrderItem(
+        orders.add(OrderModel(
             id: key,
             amount: value['amount'],
             products: (value['products'] as List<dynamic>)
@@ -52,7 +39,7 @@ class Orders with ChangeNotifier {
                       price: item['price']),
                 )
                 .toList(),
-            dateTime: DateTime.parse(value['dateTime'])));
+            dateTime: value['dateTime']));
       });
       _orders = orders;
       notifyListeners();
@@ -81,11 +68,11 @@ class Orders with ChangeNotifier {
           }));
       _orders.insert(
           0,
-          OrderItem(
+          OrderModel(
               id: json.decode(response.body)['name'],
               amount: total,
               products: cartProducts,
-              dateTime: timestamp));
+              dateTime: timestamp.toIso8601String()));
       notifyListeners();
     } catch (error) {
       throw error;

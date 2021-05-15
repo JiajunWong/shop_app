@@ -8,6 +8,7 @@ import 'package:http/src/response.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:shared_preferences/shared_preferences.dart' as _i3;
 import 'package:shop_app/library/apis/apis.dart' as _i5;
+import 'package:shop_app/library/models/product_model.dart' as _i6;
 
 // ignore_for_file: comment_references
 // ignore_for_file: unnecessary_parenthesis
@@ -118,6 +119,33 @@ class MockShopApis extends _i1.Mock implements _i5.ShopApis {
           String? authToken, String? userId) =>
       (super.noSuchMethod(
               Invocation.method(#getFavoriteProductList, [authToken, userId]),
+              returnValue: Future<_i2.Response>.value(_FakeResponse()))
+          as _i4.Future<_i2.Response>);
+  @override
+  _i4.Future<_i2.Response> updateUserProductFavorite(String? authToken,
+          String? userId, String? productId, bool? isFavorite) =>
+      (super.noSuchMethod(
+              Invocation.method(#updateUserProductFavorite,
+                  [authToken, userId, productId, isFavorite]),
+              returnValue: Future<_i2.Response>.value(_FakeResponse()))
+          as _i4.Future<_i2.Response>);
+  @override
+  _i4.Future<_i2.Response> createProduct(
+          String? authToken, _i6.ProductModel? product) =>
+      (super.noSuchMethod(
+              Invocation.method(#createProduct, [authToken, product]),
+              returnValue: Future<_i2.Response>.value(_FakeResponse()))
+          as _i4.Future<_i2.Response>);
+  @override
+  _i4.Future<_i2.Response> updateProduct(
+          String? authToken, String? key, _i6.ProductModel? product) =>
+      (super.noSuchMethod(
+              Invocation.method(#updateProduct, [authToken, key, product]),
+              returnValue: Future<_i2.Response>.value(_FakeResponse()))
+          as _i4.Future<_i2.Response>);
+  @override
+  _i4.Future<_i2.Response> deleteProduct(String? authToken, String? key) =>
+      (super.noSuchMethod(Invocation.method(#deleteProduct, [authToken, key]),
               returnValue: Future<_i2.Response>.value(_FakeResponse()))
           as _i4.Future<_i2.Response>);
 }

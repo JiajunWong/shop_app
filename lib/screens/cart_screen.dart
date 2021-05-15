@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/library/providers/cart_provider.dart' show CartProvider;
-import 'package:shop_app/provider/orders.dart';
+import 'package:shop_app/library/providers/orders_provider.dart';
 import 'package:shop_app/widgets/cart_item.dart' as CartItemView;
 
 class CartScreen extends StatelessWidget {
@@ -93,7 +93,7 @@ class _OrderButtonState extends State<OrderButton> {
                     setState(() {
                       _isLoading = true;
                     });
-                    await Provider.of<Orders>(context, listen: false).addOrder(
+                    await Provider.of<OrderProvider>(context, listen: false).addOrder(
                         widget.cartData.items.values.toList(),
                         widget.cartData.totalAmount);
                     widget.cartData.clear();

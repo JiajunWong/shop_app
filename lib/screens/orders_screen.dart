@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/orders.dart' show Orders;
+import 'package:shop_app/library/providers/orders_provider.dart' show OrderProvider;
 import 'package:shop_app/widgets/app_drawer.dart';
 import 'package:shop_app/widgets/order_item.dart';
 
@@ -15,7 +15,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Future? _ordersFuture;
 
   Future _getOrdersFuture() {
-    return Provider.of<Orders>(context, listen: false).fetchOrders();
+    return Provider.of<OrderProvider>(context, listen: false).fetchOrders();
   }
 
   @override
@@ -41,7 +41,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             );
           }
           if (dataSnapshot.error == null) {
-            return Consumer<Orders>(builder: (ctx, ordersData, _) => ListView.builder(
+            return Consumer<OrderProvider>(builder: (ctx, ordersData, _) => ListView.builder(
               itemBuilder: (ctx, index) => OrderItem(ordersData.orders[index]),
               itemCount: ordersData.orders.length,
             ));
