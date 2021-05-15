@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/library/apis/apis.dart';
-import 'package:shop_app/library/models/auth_model.dart';
 import 'package:shop_app/library/models/product_model.dart';
 import 'package:shop_app/models/http_exception.dart';
 import 'package:http/http.dart' as http;
@@ -68,7 +67,7 @@ class ProductsProvider with ChangeNotifier {
       final List<ProductModel> products = [];
       data.forEach((key, value) {
         products.add(ProductModel(
-          id: key,
+          id: value['id'],
           title: value['title'],
           description: value['description'],
           price: value['price'],
@@ -102,20 +101,15 @@ class ProductsProvider with ChangeNotifier {
     try {
       final String url =
           'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=${authToken!}';
-      final response = await http.post(Uri.parse(url),
+      await http.post(Uri.parse(url),
           body: json.encode({
+            'id': product.id,
             'title': product.title,
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
           }));
-      final newProduct = ProductModel(
-          title: product.title,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          id: json.decode(response.body)['name']);
-      _items.add(newProduct);
+      _items.add(product);
       notifyListeners();
     } catch (error) {
       throw error;
@@ -141,7 +135,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  ProductModel findById(String id) {
+  ProductModel? findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
 

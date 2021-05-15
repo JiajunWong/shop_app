@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/library/models/product_model.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -19,7 +20,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageURLController = TextEditingController();
   final _form = GlobalKey<FormState>();
   ProductModel _editedProduct =
-      ProductModel(id: '', title: '', description: '', imageUrl: '', price: 0);
+      ProductModel(id: Uuid().v1(), title: '', description: '', imageUrl: '', price: 0);
   var _isInit = false;
   var _initValues = {
     'title': '',
@@ -42,14 +43,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _isInit = true;
     final productId = ModalRoute.of(context)!.settings.arguments as String?;
     if (productId == null || productId.isEmpty) return;
-    _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
+
+    final product = Provider.of<ProductsProvider>(context, listen: false)
         .findById(productId);
-    _imageURLController.text = _editedProduct!.imageUrl!;
+    if (product != null) {
+      _editedProduct = product;
+    }
+    _imageURLController.text = _editedProduct.imageUrl;
     _initValues = {
-      'title': _editedProduct!.title!,
-      'description': _editedProduct!.description!,
-      'price': _editedProduct!.price.toString(),
-      'imageUrl': _editedProduct!.imageUrl!,
+      'title': _editedProduct.title,
+      'description': _editedProduct.description,
+      'price': _editedProduct.price.toString(),
+      'imageUrl': _editedProduct.imageUrl,
     };
   }
 
@@ -142,10 +147,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       onSaved: (value) {
                         _editedProduct = ProductModel(
                             title: value!,
-                            price: _editedProduct!.price,
-                            imageUrl: _editedProduct!.imageUrl,
-                            id: _editedProduct!.id,
-                            description: _editedProduct!.description);
+                            price: _editedProduct.price,
+                            imageUrl: _editedProduct.imageUrl,
+                            id: _editedProduct.id,
+                            description: _editedProduct.description);
                       },
                     ),
                     TextFormField(
@@ -174,11 +179,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onSaved: (value) {
                         _editedProduct = ProductModel(
-                            title: _editedProduct!.title,
+                            title: _editedProduct.title,
                             price: double.parse(value!),
-                            imageUrl: _editedProduct!.imageUrl,
-                            id: _editedProduct!.id,
-                            description: _editedProduct!.description);
+                            imageUrl: _editedProduct.imageUrl,
+                            id: _editedProduct.id,
+                            description: _editedProduct.description);
                       },
                     ),
                     TextFormField(
@@ -201,10 +206,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       },
                       onSaved: (value) {
                         _editedProduct = ProductModel(
-                            title: _editedProduct!.title,
-                            price: _editedProduct!.price,
-                            imageUrl: _editedProduct!.imageUrl,
-                            id: _editedProduct!.id,
+                            title: _editedProduct.title,
+                            price: _editedProduct.price,
+                            imageUrl: _editedProduct.imageUrl,
+                            id: _editedProduct.id,
                             description: value!);
                       },
                     ),
@@ -251,11 +256,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             },
                             onSaved: (value) {
                               _editedProduct = ProductModel(
-                                  title: _editedProduct!.title,
-                                  price: _editedProduct!.price,
+                                  title: _editedProduct.title,
+                                  price: _editedProduct.price,
                                   imageUrl: value!,
-                                  id: _editedProduct!.id,
-                                  description: _editedProduct!.description);
+                                  id: _editedProduct.id,
+                                  description: _editedProduct.description);
                             },
                           ),
                         ),

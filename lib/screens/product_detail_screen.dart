@@ -14,6 +14,10 @@ class ProductDetailScreen extends StatelessWidget {
     // listen: false will prevent the UI rebuild when provider data change
     final product =
         Provider.of<ProductsProvider>(context, listen: false).findById(productId!);
+    if (product == null) {
+      Navigator.of(context).pop();
+    }
+
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(product.title),
@@ -24,11 +28,11 @@ class ProductDetailScreen extends StatelessWidget {
             expandedHeight: 300,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(product.title!),
+              title: Text(product!.title),
               background: Hero(
-                tag: product.id!,
+                tag: product.id,
                 child: Image.network(
-                  product.imageUrl!,
+                  product.imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -54,7 +58,7 @@ class ProductDetailScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                product.description!,
+                product.description,
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
