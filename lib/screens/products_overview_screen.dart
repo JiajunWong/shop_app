@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/library/models/exceptions/token_expire_exception.dart';
 import 'package:shop_app/library/widgets/token_expire_alert.dart';
-import 'package:shop_app/provider/cart.dart';
+import 'package:shop_app/library/providers/cart_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
@@ -52,7 +52,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
             },
             icon: Icon(Icons.more_vert),
           ),
-          Consumer<Cart>(
+          Consumer<CartProvider>(
             builder: (_, cartData, child) =>
                 Badge(child: child, value: cartData.itemCount.toString()),
             child: IconButton(

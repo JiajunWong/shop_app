@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/provider/cart.dart' show Cart;
+import 'package:shop_app/library/providers/cart_provider.dart' show CartProvider;
 import 'package:shop_app/provider/orders.dart';
 import 'package:shop_app/widgets/cart_item.dart' as CartItemView;
 
@@ -9,7 +9,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartData = Provider.of<Cart>(context);
+    final cartData = Provider.of<CartProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -71,7 +71,7 @@ class OrderButton extends StatefulWidget {
     required this.cartData,
   }) : super(key: key);
 
-  final Cart cartData;
+  final CartProvider cartData;
 
   @override
   _OrderButtonState createState() => _OrderButtonState();

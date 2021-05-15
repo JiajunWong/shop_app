@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:shop_app/provider/cart.dart';
+import 'package:shop_app/library/models/cart_model.dart';
 import 'package:http/http.dart' as http;
 
 class OrderItem {
   final String? id;
   final double? amount;
-  final List<CartItem> products;
+  final List<CartModel> products;
   final DateTime dateTime;
 
   const OrderItem({
@@ -45,7 +45,7 @@ class Orders with ChangeNotifier {
             amount: value['amount'],
             products: (value['products'] as List<dynamic>)
                 .map(
-                  (item) => CartItem(
+                  (item) => CartModel(
                       id: item['id'],
                       title: item['title'],
                       quantity: item['quantity'],
@@ -61,7 +61,7 @@ class Orders with ChangeNotifier {
     }
   }
 
-  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+  Future<void> addOrder(List<CartModel> cartProducts, double total) async {
     try {
       final timestamp = DateTime.now();
       final String url =

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/app/custom_route.dart';
 import 'package:shop_app/library/providers/auth_provider.dart';
-import 'package:shop_app/provider/cart.dart';
+import 'package:shop_app/library/providers/cart_provider.dart';
 import 'package:shop_app/provider/orders.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
@@ -27,7 +27,7 @@ class ShopApp extends StatelessWidget {
                 authProvider.token,
                 authProvider.userId,
                 previousProducts == null ? [] : previousProducts.items)),
-        ChangeNotifierProvider(create: (ctx) => Cart()),
+        ChangeNotifierProvider(create: (ctx) => CartProvider()),
         ChangeNotifierProxyProvider<AuthProvider, Orders>(
             create: (ctx) => Orders(null, null, []),
             update: (ctx, auth, previousOrders) => Orders(

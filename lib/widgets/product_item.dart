@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/library/models/product_model.dart';
 import 'package:shop_app/library/providers/auth_provider.dart';
 import 'package:shop_app/library/providers/products_provider.dart';
-import 'package:shop_app/provider/cart.dart';
+import 'package:shop_app/library/providers/cart_provider.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
@@ -14,7 +14,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authData = Provider.of<AuthProvider>(context, listen: false);
-    final cartData = Provider.of<Cart>(context, listen: false);
+    final cartData = Provider.of<CartProvider>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
