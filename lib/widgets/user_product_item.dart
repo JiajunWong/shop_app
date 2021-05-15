@@ -4,19 +4,24 @@ import 'package:shop_app/library/providers/products_provider.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 
 class UserProductItem extends StatelessWidget {
-  final String? id;
-  final String? title;
-  final String? imageUrl;
+  final String? productKey;
+  final String id;
+  final String title;
+  final String imageUrl;
 
-  const UserProductItem({Key? key, this.id, this.title, this.imageUrl})
-      : super(key: key);
+  const UserProductItem({
+    this.productKey,
+    required this.id,
+    required this.title,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title!),
+      title: Text(title),
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl!),
+        backgroundImage: NetworkImage(imageUrl),
       ),
       trailing: Container(
         width: 100,
@@ -30,12 +35,11 @@ class UserProductItem extends StatelessWidget {
               },
               color: Theme.of(context).primaryColor,
             ),
-            IconButton(
+            if (productKey != null) IconButton(
               icon: Icon(Icons.delete),
               onPressed: () async {
                 try {
-                  await Provider.of<ProductsProvider>(context, listen: false)
-                      .deleteProduct(id!);
+                  await Provider.of<ProductsProvider>(context, listen: false).deleteProduct(productKey!, id);
                 } catch (ex) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(ex.toString())));

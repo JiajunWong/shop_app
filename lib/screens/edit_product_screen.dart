@@ -22,12 +22,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   ProductModel _editedProduct =
       ProductModel(id: Uuid().v1(), title: '', description: '', imageUrl: '', price: 0);
   var _isInit = false;
-  var _initValues = {
-    'title': '',
-    'description': '',
-    'price': '',
-    'imageUrl': '',
-  };
   var _isLoading = false;
 
   @override
@@ -41,21 +35,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.didChangeDependencies();
     if (_isInit) return;
     _isInit = true;
+
     final productId = ModalRoute.of(context)!.settings.arguments as String?;
     if (productId == null || productId.isEmpty) return;
 
-    final product = Provider.of<ProductsProvider>(context, listen: false)
-        .findById(productId);
+    final product = Provider.of<ProductsProvider>(context, listen: false).findById(productId);
     if (product != null) {
       _editedProduct = product;
     }
     _imageURLController.text = _editedProduct.imageUrl;
-    _initValues = {
-      'title': _editedProduct.title,
-      'description': _editedProduct.description,
-      'price': _editedProduct.price.toString(),
-      'imageUrl': _editedProduct.imageUrl,
-    };
   }
 
   void _updateImageUrl() {
@@ -76,8 +64,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         _isLoading = true;
       });
       try {
-        await Provider.of<ProductsProvider>(context, listen: false)
-            .addProduct(_editedProduct);
+        await Provider.of<ProductsProvider>(context, listen: false).addProduct(_editedProduct);
       } catch (error) {
         await showDialog(
             context: context,
@@ -129,7 +116,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 child: ListView(
                   children: [
                     TextFormField(
-                      initialValue: _initValues['title'],
+                      initialValue: _editedProduct.title,
                       decoration: const InputDecoration(
                         labelText: 'Title',
                       ),
@@ -145,16 +132,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         }
                       },
                       onSaved: (value) {
-                        _editedProduct = ProductModel(
-                            title: value!,
-                            price: _editedProduct.price,
-                            imageUrl: _editedProduct.imageUrl,
-                            id: _editedProduct.id,
-                            description: _editedProduct.description);
+                        _editedProduct.title = value!;
                       },
                     ),
                     TextFormField(
-                      initialValue: _initValues['price'],
+                      initialValue: _editedProduct.price.toString(),
                       decoration: const InputDecoration(
                         labelText: 'Price',
                       ),
@@ -178,16 +160,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _editedProduct = ProductModel(
-                            title: _editedProduct.title,
-                            price: double.parse(value!),
-                            imageUrl: _editedProduct.imageUrl,
-                            id: _editedProduct.id,
-                            description: _editedProduct.description);
+                        _editedProduct.price = double.parse(value!);
                       },
                     ),
                     TextFormField(
-                      initialValue: _initValues['description'],
+                      initialValue: _editedProduct.description,
                       decoration: const InputDecoration(
                         labelText: 'Description',
                       ),
@@ -205,12 +182,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         }
                       },
                       onSaved: (value) {
-                        _editedProduct = ProductModel(
-                            title: _editedProduct.title,
-                            price: _editedProduct.price,
-                            imageUrl: _editedProduct.imageUrl,
-                            id: _editedProduct.id,
-                            description: value!);
+                        _editedProduct.description = value!;
                       },
                     ),
                     Row(
@@ -255,12 +227,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               }
                             },
                             onSaved: (value) {
-                              _editedProduct = ProductModel(
-                                  title: _editedProduct.title,
-                                  price: _editedProduct.price,
-                                  imageUrl: value!,
-                                  id: _editedProduct.id,
-                                  description: _editedProduct.description);
+                              _editedProduct.imageUrl = value!;
                             },
                           ),
                         ),

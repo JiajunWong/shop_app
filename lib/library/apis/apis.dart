@@ -60,9 +60,15 @@ class ShopApis {
     return http.post(Uri.parse(url), body: json.encode(product.toJson()));
   }
 
-  Future<http.Response> updateProduct(String authToken, ProductModel product) {
+  Future<http.Response> updateProduct(String authToken, String key, ProductModel product) {
     final String url =
-        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products.json?auth=${authToken}';
-    return http.post(Uri.parse(url), body: json.encode(product.toJson()));
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$key.json?auth=$authToken';
+    return http.patch(Uri.parse(url), body: json.encode(product.toJson()));
+  }
+
+  Future<http.Response> deleteProduct(String authToken, String key) {
+    final String url =
+        'https://flutter-shop-app-9ce5e-default-rtdb.firebaseio.com/products/$key.json?auth=$authToken';
+    return http.delete(Uri.parse(url));
   }
 }
