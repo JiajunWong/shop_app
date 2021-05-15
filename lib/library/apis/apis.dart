@@ -6,7 +6,7 @@ import 'package:shop_app/library/models/order_model.dart';
 import 'package:shop_app/library/models/product_model.dart';
 
 class ShopApis {
-  static const _API_KEY = '';
+  static const _API_KEY = 'AIzaSyBJJU_uhGn09M-BRMbXjaYK32rWl-o_SDc';
   static final ShopApis _singleton = ShopApis._internal();
 
   factory ShopApis(){
