@@ -3,7 +3,7 @@
 A new Flutter project.
 
 ## Getting Started
-### 1. Core fatures
+### 1. Core features
 1. Flutter navigation demo
 2. State management by using Provider
 3. Input form demo
